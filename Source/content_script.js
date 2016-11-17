@@ -1,4 +1,30 @@
-walk(document.body);
+var loadJSON = function(url) {
+  request = new XMLHttpRequest();
+  request.open('GET', url, true);
+
+  request.onload = function() {
+    if (request.status >= 200 && request.status < 400){
+      phrases = JSON.parse(request.responseText);
+      walk(document.body, phrases);
+
+    } else {
+      // We reached our target server, but it returned an error
+    }
+  };
+
+  request.onerror = function() {
+    // There was a connection error of some sort
+  };
+
+  request.send();
+};
+
+var stencil_old = document.createElement("span")
+stencil_old.setAttribute("style", "text-decoration: line-through;")
+
+var url = "https://cdn.rawgit.com/ianfitzpatrick/37c37e32074ff1f648db3a4b77411ddb/raw/49e7504b2c975db9647a58774b320180fb78998e/normalization-to-not-phrases.json"
+loadJSON(url);
+
 
 function walk(node) 
 {
@@ -7,11 +33,13 @@ function walk(node)
 	
 	var child, next;
 	
-	if (node.tagName.toLowerCase() == 'input' || node.tagName.toLowerCase() == 'textarea'
-	    || node.classList.indexOf('ace_editor') > -1) {
-		return;
+	try {
+		if (node.tagName.toLowerCase() == 'input' || node.tagName.toLowerCase() == 'textarea' ) {
+			return;
+		}
+	} catch(err){
+		// Probably undefined node passed in
 	}
-
 	switch ( node.nodeType )  
 	{
 		case 1:  // Element
@@ -32,16 +60,22 @@ function walk(node)
 	}
 }
 
-function handleText(textNode) 
+function handleText(textNode)
 {
 	var v = textNode.nodeValue;
 
-	v = v.replace(/\bThe Cloud\b/g, "My Butt");
-	v = v.replace(/\bThe cloud\b/g, "My butt");
-	v = v.replace(/\bthe Cloud\b/g, "my Butt");
-	v = v.replace(/\bthe cloud\b/g, "my butt");
+	for (var key in phrases) {
+		if (phrases.hasOwnProperty(key)) {
 	
-	textNode.nodeValue = v;
-}
+			regex = new RegExp("\\b(" + key + ")\\b", "gi");
 
+			if (v.match(regex)) {
+				v =  v.replace(regex, "$1 " + phrases[key]);
+				textNode.nodeValue = v;
+
+				result = findAndReplaceDOMText(textNode, {find: regex, wrap: stencil_old });
+			}
+		}				
+	}
+}	
 

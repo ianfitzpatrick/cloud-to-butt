@@ -1,13 +1,18 @@
 {
 	"manifest_version": 2,
-	"name": "Cloud To Butt",
+	"name": "Normalization To Not",
 	"version": "1.0",
-	"description": "Replaces the text 'the cloud' with 'my butt'.",
+	"description": "Crosses out words that normalizes the Trump presidency and adds their abnormal counterpart.",
+	"icons": { "16": "icon.png",
+	     "48": "icon.png",
+	     "64": "icon.png",
+	    "128": "icon.png" },
+
 	"content_scripts": 
 	[
 		{
 			"matches": ["*://*/*"],
-			"js": ["content_script.js"],
+			"js": ["findAndReplaceDOMText.js", "content_script.js"],
 			"run_at": "document_end"
 		}
 	]
