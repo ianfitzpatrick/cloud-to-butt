@@ -22,7 +22,7 @@ var loadJSON = function(url) {
 var stencil_old = document.createElement("span")
 stencil_old.setAttribute("style", "text-decoration: line-through;")
 
-var url = "https://rawgit.com/ianfitzpatrick/37c37e32074ff1f648db3a4b77411ddb/raw/e092402b51b30d31d6fd034d863b8cf4d9c61002/normalization-to-not-phrases.json"
+var url = "https://rawgit.com/ianfitzpatrick/37c37e32074ff1f648db3a4b77411ddb/raw/dc4e0e4e1913984ef26f7cb4d5142c4d7ea47c81/normalization-to-not-phrases.json"
 loadJSON(url);
 
 
