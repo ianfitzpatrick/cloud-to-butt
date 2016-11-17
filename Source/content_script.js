@@ -1,81 +1,39 @@
-var loadJSON = function(url) {
-  request = new XMLHttpRequest();
-  request.open('GET', url, true);
+(function($){
+   
+   url = 'https://gist.github.com/ianfitzpatrick/37c37e32074ff1f648db3a4b77411ddb/raw/'
 
-  request.onload = function() {
-    if (request.status >= 200 && request.status < 400){
-      phrases = JSON.parse(request.responseText);
-      walk(document.body, phrases);
+   n2n = {
 
-    } else {
-      // We reached our target server, but it returned an error
-    }
-  };
+   		init: function() {
+   			this.get_phrases();
+   		},
 
-  request.onerror = function() {
-    // There was a connection error of some sort
-  };
+         phrases_retrieved: function(data){
+               
+            for (var key in data) {
+               this.replace_phrases(key, data[key])
+            }            
 
-  request.send();
-};
-
-var stencil_old = document.createElement("span")
-stencil_old.setAttribute("style", "text-decoration: line-through;")
-
-var url = "https://rawgit.com/ianfitzpatrick/37c37e32074ff1f648db3a4b77411ddb/raw/dc4e0e4e1913984ef26f7cb4d5142c4d7ea47c81/normalization-to-not-phrases.json"
-loadJSON(url);
+         },
 
 
-function walk(node) 
-{
-	// I stole this function from here:
-	// http://is.gd/mwZp7E
-	
-	var child, next;
-	
-	try {
-		if (node.tagName.toLowerCase() == 'input' || node.tagName.toLowerCase() == 'textarea' ) {
-			return;
-		}
-	} catch(err){
-		// Probably undefined node passed in
-	}
-	switch ( node.nodeType )  
-	{
-		case 1:  // Element
-		case 9:  // Document
-		case 11: // Document fragment
-			child = node.firstChild;
-			while ( child ) 
-			{
-				next = child.nextSibling;
-				walk(child);
-				child = next;
-			}
-			break;
+   		replace_phrases: function(old_phrase, new_phrase) {
 
-		case 3: // Text node
-			handleText(node);
-			break;
-	}
-}
+   			$("h1, h2, h3, h4, h5, h6, p, blockquote:contains('" + old_phrase +"')").html(function(_, html) {
+   				regex = new RegExp("\\b(" + old_phrase + ")\\b", "gi");
+               return html.replace(regex, '<span style="text-decoration: line-through; text-shadow: none; color: #9c9c9c;">$1</span><span style="color: red;"> ' + new_phrase +'</span>');
+   			});
+   		},
 
-function handleText(textNode)
-{
-	var v = textNode.nodeValue;
+         get_phrases: function() {
+            
+            $.getJSON(url, function(data){
+               n2n.phrases_retrieved(data);
+            });      
+         }
 
-	for (var key in phrases) {
-		if (phrases.hasOwnProperty(key)) {
-	
-			regex = new RegExp("\\b(" + key + ")\\b", "gi");
+   };
 
-			if (v.match(regex)) {
-				v =  v.replace(regex, "$1 " + phrases[key]);
-				textNode.nodeValue = v;
+   n2n.init();
 
-				result = findAndReplaceDOMText(textNode, {find: regex, wrap: stencil_old });
-			}
-		}				
-	}
-}	
-
+})(jQuery);
