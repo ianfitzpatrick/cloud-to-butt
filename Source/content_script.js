@@ -16,7 +16,6 @@
 
          },
 
-
         replace_phrases: function(old_phrase, new_phrase) {
 
             $("h1, h2, h3, h4, h5, h6, p, blockquote:contains('" + old_phrase +"')").html(function(_, html) {
