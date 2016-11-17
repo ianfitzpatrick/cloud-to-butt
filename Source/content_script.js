@@ -4,9 +4,9 @@
 
    n2n = {
 
-   		init: function() {
-   			this.get_phrases();
-   		},
+        init: function() {
+            this.get_phrases();
+        },
 
          phrases_retrieved: function(data){
                
@@ -17,13 +17,13 @@
          },
 
 
-   		replace_phrases: function(old_phrase, new_phrase) {
+        replace_phrases: function(old_phrase, new_phrase) {
 
-   			$("h1, h2, h3, h4, h5, h6, p, blockquote:contains('" + old_phrase +"')").html(function(_, html) {
-   				regex = new RegExp("\\b(" + old_phrase + ")\\b", "gi");
+            $("h1, h2, h3, h4, h5, h6, p, blockquote:contains('" + old_phrase +"')").html(function(_, html) {
+                regex = new RegExp("\\b(" + old_phrase + ")\\b", "gi");
                return html.replace(regex, '<span style="text-decoration: line-through; text-shadow: none; color: #9c9c9c;">$1</span><span style="color: red;"> ' + new_phrase +'</span>');
-   			});
-   		},
+            });
+        },
 
          get_phrases: function() {
             
