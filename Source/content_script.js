@@ -38,13 +38,13 @@ jqn2n.extend(jqn2n.expr[":"], {
 			// But targeting body:contains can wreak havoc on a page
 
 			jqn2n("	h1:containsNC('" + old_phrase +"'), \
-				   	h2:containsNC('" + old_phrase +"'), \
-				   	h3:containsNC('" + old_phrase +"'), \
-				   	h4:containsNC('" + old_phrase +"'), \
-				   	h5:containsNC('" + old_phrase +"'), \
-				   	h6:containsNC('" + old_phrase +"'), \
-				   	p:containsNC('" + old_phrase +"'), \
-				   	blockquote:containsNC('" + old_phrase +"')")
+					h2:containsNC('" + old_phrase +"'), \
+					h3:containsNC('" + old_phrase +"'), \
+					h4:containsNC('" + old_phrase +"'), \
+					h5:containsNC('" + old_phrase +"'), \
+					h6:containsNC('" + old_phrase +"'), \
+					p:containsNC('" + old_phrase +"'), \
+					blockquote:containsNC('" + old_phrase +"')")
 					.html(function(_, html) {
 						regex = new RegExp("\\b(" + old_phrase + ")\\b", "gi");
 						return html.replace(regex, function(match){
@@ -68,7 +68,7 @@ jqn2n.extend(jqn2n.expr[":"], {
 				return new_phrase.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 			}
 
-		    
+			
 		}
 
 	};
