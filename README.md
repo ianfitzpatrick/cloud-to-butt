@@ -2,6 +2,7 @@ normalization-to-not
 =============
 Chrome extension that crosses out words that normalizes the Trump presidency and adds their abnormal counterpart.
 
+![](screenshot2.png)
 ![](screenshot1.png)
 
 install instructions

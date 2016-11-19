@@ -1,10 +1,15 @@
 jqn2n = jQuery.noConflict(true);
-(function($){
 
-	gist_id = '37c37e32074ff1f648db3a4b77411ddb'
-	url = 'https://api.github.com/gists/' + gist_id;
+// Make new jQuery selector :containsNC. A case-insensitive :contains.
+jqn2n.extend(jqn2n.expr[":"], {
+	"containsNC": function(elem, i, match, array) {
+	return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+	}
+});
 
-	// url = "https://gist.github.com/ianfitzpatrick/37c37e32074ff1f648db3a4b77411ddb/raw/";
+(function(jqn2n){
+
+	url = 'http://ianfitzpatrick.com/n2n/normalization-to-not-phrases.json'
 
 	n2n = {
 
@@ -12,18 +17,12 @@ jqn2n = jQuery.noConflict(true);
 			n2n.get_phrases();
 		},
 
-		gist_retrieved: function(data){
-			
-			// Calling a raw gist directly results in 301 redirect
-			// which ajax/json request won't follow. Extract raw gist
-			// URL from Github API, as raw gist URL changes each time
-			// gist is modified.
+		get_phrases: function() {
 
-			raw_gist_url = data.files['normalization-to-not-phrases.json'].raw_url;
-			console.log(raw_gist_url);
+			jqn2n.getJSON(url, n2n.phrases_retrieved);
 
-			jqn2n.getJSON(raw_gist_url, n2n.phrases_retrieved);
 		},
+
 
 		phrases_retrieved: function(data){
 
@@ -38,26 +37,40 @@ jqn2n = jQuery.noConflict(true);
 			// There must be a smarter way to build this selector
 			// But targeting body:contains can wreak havoc on a page
 
-			jqn2n("	h1:contains('" + old_phrase +"'), \
-				   	h2:contains('" + old_phrase +"'), \
-				   	h3:contains('" + old_phrase +"'), \
-				   	h4:contains('" + old_phrase +"'), \
-				   	h5:contains('" + old_phrase +"'), \
-				   	h6:contains('" + old_phrase +"'), \
-				   	p:contains('" + old_phrase +"'), \
-				   	blockquote:contains('" + old_phrase +"')")
+			jqn2n("	h1:containsNC('" + old_phrase +"'), \
+				   	h2:containsNC('" + old_phrase +"'), \
+				   	h3:containsNC('" + old_phrase +"'), \
+				   	h4:containsNC('" + old_phrase +"'), \
+				   	h5:containsNC('" + old_phrase +"'), \
+				   	h6:containsNC('" + old_phrase +"'), \
+				   	p:containsNC('" + old_phrase +"'), \
+				   	blockquote:containsNC('" + old_phrase +"')")
 					.html(function(_, html) {
 						regex = new RegExp("\\b(" + old_phrase + ")\\b", "gi");
-						return html.replace(regex, '<span style="text-decoration: line-through; text-shadow: none; color: #9c9c9c;">$1</span><span style="color: red;"> ' + new_phrase +'</span>');
+						return html.replace(regex, function(match){
+							new_phrase = n2n.match_capitalization(match, new_phrase);
+							return '<span style="text-decoration: line-through; text-shadow: none; color: #9c9c9c;">' + match + '</span><span style="color: red;"> ' + new_phrase +'</span>'
+						});
 			});
-
 		},
 
-		get_phrases: function() {
+		match_capitalization: function(match_phrase, new_phrase) {
+			// Try our best to make new phrase match capitalization of matched phrase
 
-			jqn2n.getJSON(url, n2n.gist_retrieved);
+			if (match_phrase === match_phrase.toUpperCase() ) {
+				return new_phrase.toUpperCase();
 
+			} else if (match_phrase === match_phrase.toLowerCase() ) {
+				return new_phrase.toLowerCase();
+
+			} else {
+				// Title Case
+				return new_phrase.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+			}
+
+		    
 		}
+
 	};
 
 	n2n.init();
