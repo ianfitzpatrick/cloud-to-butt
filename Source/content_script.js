@@ -9,7 +9,7 @@ jqn2n.extend(jqn2n.expr[":"], {
 
 (function(jqn2n){
 
-	url = 'http://ianfitzpatrick.com/n2n/normalization-to-not-phrases.json'
+	url = 'https://ianfitzpatrick.com/n2n/normalization-to-not-phrases.json'
 
 	n2n = {
 
