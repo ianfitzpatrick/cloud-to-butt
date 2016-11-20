@@ -46,7 +46,7 @@ jqn2n.extend(jqn2n.expr[":"], {
 					p:containsNC('" + old_phrase +"'), \
 					blockquote:containsNC('" + old_phrase +"')")
 					.html(function(_, html) {
-						regex = new RegExp("\\b(" + old_phrase + ")\\b", "gi");
+						regex = new RegExp("[^<\\/>]\\b(" + old_phrase + ")\\b", "gi");
 						return html.replace(regex, function(match){
 							new_phrase = n2n.match_capitalization(match, new_phrase);
 							return '<span style="text-decoration: line-through; text-shadow: none; color: #9c9c9c;">' + match + '</span><span style="color: red;"> ' + new_phrase +'</span>'
