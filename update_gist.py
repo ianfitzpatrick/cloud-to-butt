@@ -20,13 +20,15 @@ directly.
 import json
 import os
 import requests
+import sys
 
 
 gist_id     = '37c37e32074ff1f648db3a4b77411ddb'
 api_url     = 'https://api.github.com/gists/%s' % gist_id
 filename    = 'normalization-to-not-phrases.json'
-cwd         = os.path.dirname(os.path.realpath(__file__))
-full_file   = '%s/%s' % (cwd, filename)
+path        = sys.argv[1]
+full_file   = '%s/%s' % (path, filename)
+
 
 # Get URL via API of RAW Gist
 gist_json = requests.get(api_url).json()
